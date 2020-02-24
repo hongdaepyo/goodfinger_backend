@@ -19,6 +19,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 @SpringBootApplication(exclude = {
         MongoAutoConfiguration.class,
         MongoDataAutoConfiguration.class})
+
 public class GoodfingerProjectApplication implements CommandLineRunner{
 
 	@Autowired
@@ -40,5 +41,4 @@ public class GoodfingerProjectApplication implements CommandLineRunner{
 		
 	}
 
-	
 }

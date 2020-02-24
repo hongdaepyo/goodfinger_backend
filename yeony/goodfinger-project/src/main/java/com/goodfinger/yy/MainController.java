@@ -20,6 +20,7 @@ public class MainController {
 //		System.out.println("여기 오는지 테스으");
 //        return new ModelAndView("index/index");
 //    }
+
 	@Autowired
 	private UserRepository repository;
 	
@@ -27,6 +28,7 @@ public class MainController {
 	@GetMapping("yy")
     public String root_test() throws Exception{
 		System.out.println("yytest Success.");
+
 		String userData = "";
 		for (com.goodfinger.yy.User user : repository.findAll()) {
 	      System.out.println(user.toString());
