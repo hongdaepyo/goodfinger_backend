@@ -1,4 +1,4 @@
-package com.goodFinger.config;
+package com.goodFinger.GoodFingerAnnouncementApplication.config;
 
 import java.util.Arrays;
 
