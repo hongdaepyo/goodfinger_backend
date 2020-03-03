@@ -21,7 +21,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 	public String testFunc() {
 		List<Announcement> announcement = announcementRepo.findAll();
 		
-		System.out.println(announcement.get(0).getValue());
+		System.out.println(announcement.get(0).getAnnouncement_id());
 		
 		return announcement.toString();
 	}
