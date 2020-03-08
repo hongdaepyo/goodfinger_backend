@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Repository
-public interface UserRepository extends MongoRepository <User, Object> {
+public interface UserRepository extends MongoRepository<User, Object> {
     @Override
     List<User> findAll(Sort sort);
 
