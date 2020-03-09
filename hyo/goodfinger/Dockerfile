@@ -7,7 +7,7 @@ FROM openjdk:13-alpine
 
     EXPOSE 8080
 
-    ARG JAR_FILE=target/goodfinger-0.0.1-SNAPSHOT.jar
+    ARG JAR_FILE=gradle/wrapper/gradle-wrapper.jar
 
     ADD ${JAR_FILE} goodfinger-hyo.jar
 
