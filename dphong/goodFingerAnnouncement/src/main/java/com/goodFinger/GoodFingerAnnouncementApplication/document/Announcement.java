@@ -42,4 +42,5 @@ public class Announcement implements Serializable {
 	private String questions;
 	private String applicant_questions;
 	private String[] applicant;
+
 }
