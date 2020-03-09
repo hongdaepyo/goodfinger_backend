@@ -22,7 +22,25 @@ public class Announcement implements Serializable {
 	
 	@Id
 	private String id;
+	private String announcement_id;
+	private String company;
+	private int category;
+	private String location_city;
+	private String location_district;
+	private int recruitment;
+	private String preferred_sex;
+	private int[] preferred_age = {10, 20 ,30};
+	private String task;
+	private String work_date;
+	private String work_time;
+	private String[] salary = {"day", "time", "month"};
+	private String etc;
+	private String joboffer;
+	private String[] picture;
+	private String memo;
 	private String name;
-	private String value;
-	
+	private String questions;
+	private String applicant_questions;
+	private String[] applicant;
+
 }
