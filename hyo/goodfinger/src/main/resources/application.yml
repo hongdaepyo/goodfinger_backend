@@ -1,0 +1,45 @@
+spring:
+  profiles:
+    active: localServer
+
+# local
+---
+server:
+  port: 8080
+spring:
+  profiles: local
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: admin
+      username: hyo
+      password: hyo
+
+# localServer
+---
+server:
+  port: 80
+spring:
+  profiles: localServer
+  data:
+    mongodb:
+      host: mongo
+      port: 27017
+      database: admin
+      username: hyo
+      password: hyo
+
+# server
+---
+server:
+  port: 8080
+spring:
+  profiles: server
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: admin
+      username: hyo
+      password: hyo
