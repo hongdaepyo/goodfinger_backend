@@ -2,6 +2,12 @@ plugins {
 	id 'org.springframework.boot' version '2.2.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'com.palantir.docker' version '0.22.1'
+	id 'com.google.cloud.tools.jib' version '1.8.0'
+}
+
+ext {
+    BUILD_VERSION = new Date().format("yyyyMMddHHmmss") // 빌드한 시간을 Image Tag 로 표시하기 위하여 사용한다.
 }
 
 group = 'com.goodFinger'
@@ -38,4 +44,11 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+docker {
+    name "goodFinger/announcement"
+    tags "${project.version}", "${BUILD_VERSION}"
+    files tasks.bootJar.outputs.files
+    buildArgs(['JAR_FILE': tasks.bootJar.outputs.files.singleFile.name])
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.goodFinger.GoodFingerAnnouncementApplication.service.AnnouncementServiceImpl;
 
 @RestController
-//@RequestMapping("/announcement")
+@RequestMapping("/announcement")
 public class AnnouncementController {
 	
 	@Resource(name = "AnnouncementService")
