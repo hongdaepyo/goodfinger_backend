@@ -20,11 +20,17 @@ public class MongoConfig extends AbstractMongoConfiguration {
 	
 	@Value("${spring.data.mongodb.database}")
 	private String database;
+	
+	@Value("${spring.data.mongodb.host}")
+	private String host;
+	
+	@Value("${spring.data.mongodb.port}")
+	private int port;
 
 	@Override
 	public MongoClient mongoClient() {
 		MongoCredential credential = MongoCredential.createCredential(userName, database, password.toCharArray());
-		return new MongoClient(new ServerAddress("127.0.0.1", 17017), Arrays.asList(credential));
+		return new MongoClient(new ServerAddress(host, port), Arrays.asList(credential));
 	}
 
 	@Override

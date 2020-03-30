@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Data
-@Document(collection = "announcement")
+@Document(collection = "Announcement")
 @Getter @Setter
 public class Announcement implements Serializable {
 	
@@ -22,17 +22,20 @@ public class Announcement implements Serializable {
 	
 	@Id
 	private String id;
-	private String announcement_id;
+	private String announcementId;
+	private String flag;
 	private String company;
 	private int category;
-	private String location_city;
-	private String location_district;
+	private String locationCity;
+	private String locationDistrict;
 	private int recruitment;
-	private String preferred_sex;
-	private int[] preferred_age = {10, 20 ,30};
+	private String preferredSex;
+	private int[] preferredAge = {10, 20 ,30};
 	private String task;
-	private String work_date;
-	private String work_time;
+	private String startDate;
+	private String endDate;
+	private String startTime;
+	private String endTime;
 	private String[] salary = {"day", "time", "month"};
 	private String etc;
 	private String joboffer;

@@ -9,8 +9,8 @@ build/
 .apt_generated
 .classpath
 .factorypath
-.project
 .settings
+.project
 .springBeans
 .sts4-cache
 
@@ -30,3 +30,4 @@ out/
 
 ### VS Code ###
 .vscode/
+bin/
