@@ -1,29 +1,32 @@
 package com.backend.goodfinger.user;
 
+import com.backend.goodfinger.auth.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/users")
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
-    UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-    UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
 
     @PostMapping("/signUp")
     public ResponseEntity<?> signUp(@RequestBody User user) throws Exception {
         logger.debug("signUp started.");
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.insert(user);
 
         logger.debug("signUp ended.");
@@ -33,8 +36,13 @@ public class UserController {
 
     @PostMapping("/signIn")
     public ResponseEntity<?> signIn(@RequestBody User user) throws Exception {
-        //TODO jwt 만들어서 넣어줘
-        //TODO 암호화해야하는데 springsecurity 공부해
+        /*User member = userRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+        if (!passwordEncoder.matches(user.getPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+        }
+
+        return new ResponseEntity<>(jwtTokenProvider.createToken(member.getEmail(), member.getRoles()), HttpStatus.OK);*/
         return null;
     }
 
@@ -42,7 +50,7 @@ public class UserController {
     public ResponseEntity<?> getUser(@PathVariable String email) throws Exception {
         logger.debug("getUser started.");
 
-        User user = userRepository.findUserByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
 
         if (user == null) {
             return new ResponseEntity<>("user is not exist.", HttpStatus.NOT_FOUND);
