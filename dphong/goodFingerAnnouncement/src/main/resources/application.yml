@@ -1,20 +1,20 @@
 spring:
   profiles:
-    active: localServer
+    active: local
 
 # local
 ---
 server:
-  port: 8080
+  port: 8082
 spring:
   profiles: local
   data:
     mongodb:
-      host: 127.0.0.1
+      host: goodfinger.com
       port: 27017
-      database: admin
-      username: hyo
-      password: hyo
+      database: goodFinger
+      username: dphong
+      password: 1234
 
 # localServer
 ---
@@ -27,8 +27,8 @@ spring:
       host: mongo
       port: 27017
       database: admin
-      username: hyo
-      password: hyo
+      username: dphong
+      password: 1234
 
 # server
 ---
@@ -41,5 +41,5 @@ spring:
       host: 127.0.0.1
       port: 27017
       database: admin
-      username: hyo
-      password: hyo
+      username: dphong
+      password: 1234
