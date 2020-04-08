@@ -77,47 +77,28 @@ public class GoodfingerController_yy {
 		if (comstring == null || files == null) {
 			new ResponseEntity("null", HttpStatus.GONE);
 		}
+		JSONObject param = new JSONObject();
+		param.put("comString", comstring);
+		param.put("files", files);
+		param.put("filePathRoot", filePathRoot);
+		
 		
 		System.out.println("request" + request);
 		System.out.println("comString" + comstring);
 		
-		if (files != null){
-			for(MultipartFile file : files){
-				System.out.println(file.getOriginalFilename());
-			}
-		}
-		
 		Company com = new Company();
+		Company successInsert = new Company();
 		
 		try {
-			JSONParser jsonpar = new JSONParser();
-			JSONObject insertCom = (JSONObject) jsonpar.parse(comstring);
-			com.setcomid(insertCom.get("comid").toString());
-			com.setLocation(insertCom.get("location").toString());
-			com.setMastername(insertCom.get("mastername").toString());
-			com.setName(insertCom.get("name").toString());
-			
-			List<String> filePath = new ArrayList<String>();
-			for(MultipartFile file2 : files){
-				String fileName = file2.getOriginalFilename();
-				String originFilePath = filePathRoot + fileName;
-				File fileData = new File(originFilePath);
-				file2.transferTo(fileData);
-				filePath.add(originFilePath);
+			successInsert = service.insertCompany(param);
+			if(successInsert == null){
+				new ResponseEntity("error", HttpStatus.EXPECTATION_FAILED);
 			}
-			
-			com.setPicture(filePath);
-			service.insertCompany(com);
 		} catch ( Exception  e) {
 			e.printStackTrace();
-			new ResponseEntity("error", HttpStatus.GONE);
+			new ResponseEntity("error", HttpStatus.EXPECTATION_FAILED);
 		} 
 		
-		Company successInsert = new Company();
-		successInsert = repositoryCom.findBycomid(com.getcomid());
-		if(successInsert == null){
-			new ResponseEntity(successInsert, HttpStatus.GONE);
-		}
 		return new ResponseEntity(successInsert, HttpStatus.OK);
 	}	
 }
