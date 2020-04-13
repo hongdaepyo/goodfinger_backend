@@ -1,8 +1,8 @@
 # Start with a base image containing Java runtime
-FROM java:8
+FROM openjdk:8-alpine
 
 # Add Author info
-LABEL maintainer="pyenkr93@gmail.com"
+LABEL maintainer="h1o1n1g1@nate.com"
 
 # Add a volume to /tmp
 VOLUME /tmp
@@ -11,10 +11,10 @@ VOLUME /tmp
 EXPOSE 80
 
 # The application's jar file
-ARG JAR_FILE=target/goodfinger-project-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=gradle/wrapper/gradle-wrapper.jar
 
 # Add the application's jar to the container
-ADD ${JAR_FILE} goodfinger2-springboot.jar
+ADD ${JAR_FILE} goodfinger-dphong.jar
 
 # Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/goodfinger2-springboot.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/goodfinger-dphong.jar"]
