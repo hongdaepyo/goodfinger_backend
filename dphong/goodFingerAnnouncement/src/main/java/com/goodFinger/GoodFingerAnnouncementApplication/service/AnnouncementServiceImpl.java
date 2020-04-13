@@ -14,11 +14,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 	
 	@Autowired
 	private AnnouncementRepo announcementRepo;
-
+	
 	public String testFunc() {
 		List<Announcement> announcement = announcementRepo.findAll();
-		
-		System.out.println(announcement.get(0).getAnnouncement_id());
 		
 		return announcement.toString();
 	}
