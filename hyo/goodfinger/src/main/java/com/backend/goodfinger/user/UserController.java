@@ -1,48 +1,32 @@
-package com.backend.goodfinger.user;
+package com.backend.goodfinger.login;
 
+import com.backend.goodfinger.auth.JwtTokenProvider;
+import com.backend.goodfinger.user.User;
+import com.backend.goodfinger.user.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
 
+@RequiredArgsConstructor
+@RequestMapping("/user")
 @RestController
-@CrossOrigin
-@RequestMapping("/users")
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
-    UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-    UserRepository userRepository;
-
-    @PostMapping("/signUp")
-    public ResponseEntity<?> signUp(@RequestBody User user) throws Exception {
-        logger.debug("signUp started.");
-
-        userRepository.insert(user);
-
-        logger.debug("signUp ended.");
-
-        return new ResponseEntity<>("user added successfully.", HttpStatus.OK);
-    }
-
-    @PostMapping("/signIn")
-    public ResponseEntity<?> signIn(@RequestBody User user) throws Exception {
-        //TODO jwt 만들어서 넣어줘
-        //TODO 암호화해야하는데 springsecurity 공부해
-        return null;
-    }
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
 
     @GetMapping("/{email}")
     public ResponseEntity<?> getUser(@PathVariable String email) throws Exception {
         logger.debug("getUser started.");
 
-        User user = userRepository.findUserByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
 
         if (user == null) {
             return new ResponseEntity<>("user is not exist.", HttpStatus.NOT_FOUND);
@@ -53,21 +37,31 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{email}")
-    public ResponseEntity<?> deleteUser(@PathVariable String email) throws Exception {
-        //TODO 1.pathvariable , object 매핑
-        //TODO 2.다른 delete 방식
-        //둘중하나 찾아서 ㄱ
-        logger.debug("deleteUser started.");
+    @GetMapping("")
+    public ResponseEntity<?> getUsers() throws Exception {
+        logger.debug("getUsers started.");
 
-        User user = new User();
-        user.setEmail(email);
+        List<User> users = userRepository.findAll();
 
-        userRepository.delete(user);
+        logger.debug("getUsers ended.");
 
-        logger.debug("deleteUser ended.");
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @PostMapping("/edit")
+    public ResponseEntity<?> editUser(@RequestBody User user) throws Exception {
+        logger.debug("editUser started. email = " + user.getEmail());
+
+//        userRepository.update(user);
+
+        logger.debug("editUser ended.");
+
+        return new ResponseEntity<>("edit user successfully.", HttpStatus.OK);
+    }
+
+    @GetMapping("/corsTest")
+    public ResponseEntity<?> corsTest() throws Exception {
+        logger.debug("corsTest");
+        return new ResponseEntity<>("구우우우웃", HttpStatus.OK);
+    }
 }
