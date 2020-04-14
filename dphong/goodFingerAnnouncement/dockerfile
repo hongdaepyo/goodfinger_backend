@@ -17,4 +17,4 @@ ARG JAR_FILE=gradle/wrapper/gradle-wrapper.jar
 ADD ${JAR_FILE} goodfinger-dphong.jar
 
 # Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/goodfinger-dphong.jar"]
+ENTRYPOINT ["java","-jar","/goodfinger-dphong.jar"]
