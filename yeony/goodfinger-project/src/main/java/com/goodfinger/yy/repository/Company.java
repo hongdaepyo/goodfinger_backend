@@ -6,20 +6,27 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="Company")
 public class Company {
-	private String comid;
+	private String id;
 	private String name;
 	private String location;
 	private String mastername;
+	private String masterId;
 	private List<String> picture;
 	
-	public String getcomid() {
-		return comid;
+	public String getId() {
+		return id;
 	}
-
-	public void setcomid(String comid) {
-		this.comid = comid;
+	
+	public void setId(String id) {
+		this.id = id;
 	}
-
+	public String getMasterId() {
+		return masterId;
+	}
+	
+	public void setMasterId(String masterId) {
+		this.masterId = masterId;
+	}
 	public String getName() {
 		return name;
 	}
@@ -54,6 +61,6 @@ public class Company {
 
 	@Override
 	public String toString() {
-		return String.format("{comid:'%s', name:'%s', location:'%s', mastername:'%s', picture:'%s'}", comid,name,location,mastername,picture);
+		return String.format("{name:'%s', location:'%s', mastername:'%s', picture:'%s'}", name,location,mastername,picture);
 	}
 }
