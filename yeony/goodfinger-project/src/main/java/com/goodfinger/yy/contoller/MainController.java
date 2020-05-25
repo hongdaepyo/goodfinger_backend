@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.goodfinger.yy.repository.Company;
-import com.goodfinger.yy.repository.CompanyRepository;
 import com.goodfinger.yy.repository.User;
 import com.goodfinger.yy.repository.UserRepository;
 
@@ -34,9 +32,6 @@ public class MainController {
 	@Autowired
 	private UserRepository repository;
 	
-	@Autowired
-	private CompanyRepository comRrepository;
-	
 	@CrossOrigin(origins = "*")
 	@GetMapping("yy")
     public ResponseEntity root_test() throws Exception{
@@ -49,25 +44,9 @@ public class MainController {
 	      userData += user.toString();
 	    }
 		System.out.println();
-		System.out.println(repository.findAll());
+		System.out.println(repository.findByName("예연2"));
 		return new ResponseEntity(userData2, HttpStatus.OK);
     }
-	
-	@CrossOrigin(origins = "*")
-	@GetMapping("comcomcom")
-	public ResponseEntity company_test() throws Exception{
-		System.out.println("yytest Success.");
-		
-		String userData = "";
-		List<Company> userData2 = comRrepository.findAll();
-		for (Company user : userData2) {
-			System.out.println(user.toString());
-			userData += user.toString();
-		}
-		System.out.println();
-		System.out.println(repository.findAll());
-		return new ResponseEntity(userData2, HttpStatus.OK);
-	}
 	
 	@RequestMapping("getparam")
 	public String getparam(Model model, @RequestParam (value = "name") String name) throws Exception{

@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: localServer
+  jwt:
+    secret: goodFinger!@#
 
 # local
 ---
@@ -12,7 +14,7 @@ spring:
     mongodb:
       host: 127.0.0.1
       port: 27017
-      database: admin
+      database: goodFinger
       username: hyo
       password: hyo
 
@@ -26,7 +28,7 @@ spring:
     mongodb:
       host: mongo
       port: 27017
-      database: admin
+      database: goodFinger
       username: hyo
       password: hyo
 
@@ -38,8 +40,8 @@ spring:
   profiles: server
   data:
     mongodb:
-      host: 127.0.0.1
+      host: mongo
       port: 27017
-      database: admin
+      database: goodFinger
       username: hyo
       password: hyo
