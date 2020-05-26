@@ -34,9 +34,6 @@ import com.goodfinger.yy.service.GoodfingerServiceImpl;
 public class GoodfingerController_yy {
 	Logger log = LoggerFactory.getLogger(GoodfingerController_yy.class);
 
-	@Autowired
-	private CompanyRepository repositoryCom;
-	
 	@Resource(name = "GoodfingerService")
 	private GoodfingerService service ;
 	
@@ -45,17 +42,34 @@ public class GoodfingerController_yy {
 	
 	@CrossOrigin(origins = "*")
 	@GetMapping("company")
-	public ResponseEntity getCompany(@RequestParam(value = "comId") String comId) throws Exception{
+	public ResponseEntity<Company> getCompany(@RequestParam(value = "comId") String comId) throws Exception{
 		log.debug("getCompany start.");
 		log.debug("comId:'" + comId + "'");
 		
 		Company com = service.getCompanyByComId(comId);
 		if(com == null){
-			return new ResponseEntity(com, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Company>(com, HttpStatus.NO_CONTENT);
 		}
 		log.debug("getCompany end.");
-		return new ResponseEntity(com, HttpStatus.OK);
+		return new ResponseEntity<Company>(com, HttpStatus.OK);
 	}
+
+	@CrossOrigin(origins = "*")
+	@GetMapping("companys")
+	public ResponseEntity getCompanys(@RequestParam(value = "masterId") String masterId) throws Exception{
+		log.debug("getCompanys start.");
+		log.debug("masterId:'" + masterId + "'");
+		
+		List<Company> coms = service.getCompanyByMasterId(masterId);
+		
+		if(coms == null){
+			return new ResponseEntity(coms, HttpStatus.NO_CONTENT);
+		}
+		
+		log.debug("getCompanys end.");
+		return new ResponseEntity(coms, HttpStatus.OK);
+	}
+
 	
 	/**
 	 * 
@@ -70,28 +84,27 @@ public class GoodfingerController_yy {
 	 * @param files
 	 * @return
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@CrossOrigin(origins = "*")
 	@PostMapping(value="insert", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity insertCompany(HttpServletRequest request, @RequestParam String comstring, 
+	public ResponseEntity insertCompany(HttpServletRequest request, @RequestParam String company, 
 			@RequestParam(value="files", required = false) ArrayList<MultipartFile> files) {
-		if (comstring == null || files == null) {
+		if (company == null) {
 			new ResponseEntity("null", HttpStatus.GONE);
 		}
 		JSONObject param = new JSONObject();
-		param.put("comString", comstring);
+		param.put("comString", company);
 		param.put("files", files);
 		param.put("filePathRoot", filePathRoot);
 		
-		
 		System.out.println("request" + request);
-		System.out.println("comString" + comstring);
+		System.out.println("comString" + company);
 		
-		Company com = new Company();
-		Company successInsert = new Company();
+		String returnStatus = "";
 		
 		try {
-			successInsert = service.insertCompany(param);
-			if(successInsert == null){
+			returnStatus = service.insertCompany(param);
+			if(returnStatus == null){
 				new ResponseEntity("error", HttpStatus.EXPECTATION_FAILED);
 			}
 		} catch ( Exception  e) {
@@ -99,6 +112,66 @@ public class GoodfingerController_yy {
 			new ResponseEntity("error", HttpStatus.EXPECTATION_FAILED);
 		} 
 		
-		return new ResponseEntity(successInsert, HttpStatus.OK);
+		return new ResponseEntity(returnStatus, HttpStatus.OK);
 	}	
+	
+	@SuppressWarnings("unchecked")
+	@CrossOrigin(origins = "*")
+	@PostMapping(value="update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<String> updateCompany(HttpServletRequest request, @RequestParam String company, 
+			@RequestParam(value="files", required = false) ArrayList<MultipartFile> files,
+			@RequestParam String comId) {
+		if (company == null ) {
+			new ResponseEntity<String>("null", HttpStatus.GONE);
+		}
+		JSONObject param = new JSONObject();
+		param.put("comString", company);
+		param.put("files", files);
+		param.put("filePathRoot", filePathRoot);
+		param.put("comId", comId);
+		
+		log.debug("request:" + request);
+		System.out.println("request" + request);
+		System.out.println("company" + company);
+		
+		String returnStatus = "";
+		
+		try {
+			returnStatus = service.updateCompany(param);
+			if(returnStatus.equalsIgnoreCase("error")){
+				new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
+			} 
+		} catch ( Exception  e) {
+			e.printStackTrace();
+			new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
+		} 
+		
+		return new ResponseEntity<String>(returnStatus, HttpStatus.OK);
+	}
+
+	@CrossOrigin(origins = "*")
+	@PostMapping(value="delete")
+	public ResponseEntity<String> deleteCompany(HttpServletRequest request,	@RequestParam String comId) {
+		if (comId == null ) {
+			new ResponseEntity<String>("null", HttpStatus.GONE);
+		}
+		
+		log.debug("request:" + request);
+		System.out.println("request" + request);
+		
+		String returnStatus = "";
+		
+		try {
+			returnStatus = service.deleteCompany(comId);
+			if(returnStatus.equalsIgnoreCase("error")){
+				new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
+			}
+			returnStatus = "ok";
+		} catch ( Exception  e) {
+			e.printStackTrace();
+			new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
+		} 
+		
+		return new ResponseEntity<String>(returnStatus, HttpStatus.OK);
+	}
 }
