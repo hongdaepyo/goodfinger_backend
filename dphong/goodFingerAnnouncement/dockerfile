@@ -11,7 +11,7 @@ VOLUME /tmp
 EXPOSE 80
 
 # The application's jar file
-ARG JAR_FILE=gradle/wrapper/gradle-wrapper.jar
+ARG JAR_FILE=build/libs/*.jar
 
 # Add the application's jar to the container
 ADD ${JAR_FILE} goodfinger-dphong.jar
