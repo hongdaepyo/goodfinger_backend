@@ -1,5 +1,7 @@
 package com.goodFinger.GoodFingerAnnouncementApplication.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.goodFinger.GoodFingerAnnouncementApplication.document.Announcement;
 import com.goodFinger.GoodFingerAnnouncementApplication.service.AnnouncementServiceImpl;
 
 @RestController
@@ -27,11 +30,11 @@ public class AnnouncementController {
 		return "helloWorld";
 	}
 	
-	@GetMapping(path = "/getHello")
-	public String helloSpringWorld() {
-		logger.debug("helloSpringWorld started");
-		logger.debug("helloSpringWorld ended");		
-		return announcementServiceImpl.testFunc();
+	@GetMapping(path = "/list")
+	public List<Announcement> getAnnouncementList() {
+		logger.debug("getAnnouncementList started");
+		logger.debug("getAnnouncementList ended");		
+		return announcementServiceImpl.getAnnouncementList();
 	}
 	
 	

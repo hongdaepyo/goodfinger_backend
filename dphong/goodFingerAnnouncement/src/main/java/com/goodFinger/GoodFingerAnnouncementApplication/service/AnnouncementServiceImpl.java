@@ -19,10 +19,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	public String testFunc() {
-		List<Announcement> announcement = announcementRepo.findAll();
+	public List<Announcement> getAnnouncementList() {
 		
-		return announcement.toString();
+		return announcementRepo.findAll();
 	}
 
 	@Override
