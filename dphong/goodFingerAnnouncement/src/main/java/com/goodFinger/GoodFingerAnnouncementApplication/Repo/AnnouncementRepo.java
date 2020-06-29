@@ -10,4 +10,5 @@ public interface AnnouncementRepo extends MongoRepository<Announcement, Long> {
 	public List<Announcement> findAll();
 	public List<Announcement> findById(String id);
 	public List<Announcement> findByName(String name);
+//	public String insertTestData(Announcement announcement);
 }
