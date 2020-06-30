@@ -36,6 +36,13 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 		
 		return announcementRepo.findAllByStartDateAfter(todayDate);
 	}
+	
+	@Override
+	public String insertAnnouncement(Announcement announcement) throws Exception {
+		mongoTemplate.insert(announcement);
+		
+		return "TRUE";
+	}
 
 	@Override
 	public String insertTestData() throws Exception {

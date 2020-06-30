@@ -8,6 +8,7 @@ public interface AnnouncementService {
 	
 	public List<Announcement> getAnnouncementList() throws Exception;
 	public List<Announcement> getWaitingAnnouncementList() throws Exception;
+	public String insertAnnouncement(Announcement announcement) throws Exception;
 	public String insertTestData() throws Exception;
 	
 }
