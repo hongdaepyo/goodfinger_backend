@@ -1,5 +1,7 @@
 package com.goodFinger.GoodFingerAnnouncementApplication.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,17 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 		
 		return announcementRepo.findAll();
 	}
+	
+	@Override
+	public List<Announcement> getWaitingAnnouncementList() throws Exception {
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date time = new Date();
+		
+		String todayDate = format.format(time);
+		
+		return announcementRepo.findAllByStartDateAfter(todayDate);
+	}
 
 	@Override
 	public String insertTestData() throws Exception {
@@ -38,20 +51,20 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 		announcement.setRecruitment(5);
 		announcement.setPreferredSex("all");
 		announcement.setPreferredAge(new int[] {10, 20 ,30});
-		announcement.setTask("¸ÅÀå°ü¸®");
+		announcement.setTask("ë§¤ì¥ê´€ë¦¬");
 		announcement.setStartDate("2019-11-20");
 		announcement.setEndDate("2019-12-20");
 		announcement.setStartTime("00:00");
 		announcement.setEndTime("24:00");
 		announcement.setSalary(new String[] {"day", "time"});
-		announcement.setEtc("{´çÀÏÁö±Ş:\"ok\", ¹«±ŞÈŞ°Ô½Ã°£:\"ok\", ÀÏ¿ë±Ù·ÎÀÚ½Å°í¾÷Ã¼:\"no\"}");
-		announcement.setJoboffer("{°£´Ü¼Ò°³:\"¼Ö·ç¼ÇÈ¸»çÀÔ´Ï´Ù. ±×·ì¿ş¾î\", picture:[\"°æ·Î1\",\"°æ·Î2\",\"°æ·Î3\"]}");
-		announcement.setMemo("¸Ş¸ğ");
+		announcement.setEtc("{ë‹¹ì¼ì§€ê¸‰:\"ok\", ë¬´ê¸‰íœ´ê²Œì‹œê°„:\"ok\", ì¼ìš©ê·¼ë¡œìì‹ ê³ ì—…ì²´:\"no\"}");
+		announcement.setJoboffer("{ê°„ë‹¨ì†Œê°œ:\"ì†”ë£¨ì…˜íšŒì‚¬ì…ë‹ˆë‹¤. ê·¸ë£¹ì›¨ì–´\", picture:[\"ê²½ë¡œ1\",\"ê²½ë¡œ2\",\"ê²½ë¡œ3\"]}");
+		announcement.setMemo("ë©”ëª¨");
 		announcement.setQuestions("question array");
 		
 		mongoTemplate.insert(announcement);
 		
 		return "TRUE";
 	}
-	
+
 }

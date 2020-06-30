@@ -37,6 +37,13 @@ public class AnnouncementController {
 		return announcementServiceImpl.getAnnouncementList();
 	}
 	
+	@GetMapping(path = "/list/wait")
+	public List<Announcement> getWaitingAnnouncementList() throws Exception {
+		logger.debug("getWaitingAnnouncementList started");
+		logger.debug("getWaitingAnnouncementList ended");		
+		return announcementServiceImpl.getWaitingAnnouncementList();
+	}
+	
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/insertTestData")
 	public String setTestData() {
