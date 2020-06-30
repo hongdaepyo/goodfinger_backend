@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: server
+    active: local
 
 # local
 ---
@@ -20,6 +20,8 @@ spring:
       database: goodFinger
       username: dphong
       password: 1234
+file:
+  uploadDir = /d/test/
 
 # localServer
 ---
