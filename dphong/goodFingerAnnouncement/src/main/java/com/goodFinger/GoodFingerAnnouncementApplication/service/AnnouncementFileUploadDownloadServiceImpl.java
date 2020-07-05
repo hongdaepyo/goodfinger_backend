@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +18,7 @@ import com.goodFinger.GoodFingerAnnouncementApplication.exception.FileDownloadEx
 import com.goodFinger.GoodFingerAnnouncementApplication.exception.FileUploadException;
 import com.goodFinger.GoodFingerAnnouncementApplication.property.FileUploadProperties;
 
-@Component("fileService")
+@Service("fileService")
 public class AnnouncementFileUploadDownloadServiceImpl implements AnnouncementFileUploadDownloadService {
 	private final Path fileLocation;
 	
