@@ -1,8 +1,15 @@
+
+  
 spring:
   profiles:
-    active: server
+    active: local
 
 # local
+---
+
+logging:
+  config: classpath:log4j2.yml
+
 ---
 server:
   port: 8082
@@ -15,6 +22,8 @@ spring:
       database: goodFinger
       username: dphong
       password: 1234
+file:
+  upload-dir: /test/
 
 # localServer
 ---
