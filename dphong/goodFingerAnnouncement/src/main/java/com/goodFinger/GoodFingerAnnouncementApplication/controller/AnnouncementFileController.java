@@ -41,7 +41,7 @@ public class AnnouncementFileController {
 		
 		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
 								.path("/downloadFile/")
-								.path("fileName")
+								.path(fileName)
 								.toUriString();
 		
 		logger.debug("uploadFile ended");
