@@ -4,8 +4,10 @@ FROM openjdk:8-alpine
 # Add Author info
 LABEL maintainer="h1o1n1g1@nate.com"
 
+RUN mkdir -p /home/files/announcementFile/
+
 # Add a volume to /tmp
-VOLUME /tmp
+VOLUME /home/ec2-user/fileROOT/
 
 # Make port 8080 available to the world outside this container
 EXPOSE 80
@@ -17,4 +19,4 @@ ARG JAR_FILE=build/libs/*.jar
 ADD ${JAR_FILE} goodfinger-dphong.jar
 
 # Run the jar file
-ENTRYPOINT ["java","-jar","/goodfinger-dphong.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=server", "/goodfinger-dphong.jar"]

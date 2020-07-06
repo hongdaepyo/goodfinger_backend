@@ -52,3 +52,5 @@ spring:
       database: goodFinger
       username: dphong
       password: 1234
+file:
+  upload-dir: /home/files/announcementFile
