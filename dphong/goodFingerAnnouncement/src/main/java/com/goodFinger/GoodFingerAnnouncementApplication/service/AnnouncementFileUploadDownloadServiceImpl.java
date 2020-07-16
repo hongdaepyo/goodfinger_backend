@@ -53,7 +53,7 @@ public class AnnouncementFileUploadDownloadServiceImpl implements AnnouncementFi
 	}
 
 	@Override
-	public Resource loadFileAsResource(String fileName) throws Exception {
+	public Resource loadFileAsResource(String fileName) {
 		try {
 			Path filePath = this.fileLocation.resolve(fileName).normalize();
 			Resource resource = new UrlResource(filePath.toUri());

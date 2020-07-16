@@ -1,6 +1,9 @@
 package com.goodFinger.GoodFingerAnnouncementApplication.controller;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,9 +40,15 @@ public class AnnouncementFileController {
 	private AnnouncementFileUploadDownloadService service;
 	
 	@PostMapping("/uploadFile")
-	public FileUploadResponse uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
+	public FileUploadResponse uploadFile(@RequestParam("file") MultipartFile file) {
 		logger.debug("uploadFile started");
-		String fileName = service.storeFile(file);
+		String fileName = "";
+		try {
+			fileName = service.storeFile(file);
+		} catch (Exception e) {
+			logger.debug("uploadFile error");
+			e.printStackTrace();
+		}
 		
 		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
 								.path("/downloadFile/")
@@ -52,14 +63,36 @@ public class AnnouncementFileController {
 	@PostMapping("uploadMultipleFiles")
 	public List<FileUploadResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
 		logger.debug("uploadMultipleFiles started");
+		
 		logger.debug("uploadMultipleFiles ended");
-		return null;
+		return Arrays.asList(files)
+				.stream()
+				.map(file -> uploadFile(file))
+				.collect(Collectors.toList());
 	}
 	
 	@GetMapping("/downloadFile/{fileName:.+}")
-	public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+	public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) throws Exception {
 		logger.debug("downloadFile started");
+		
+		Resource resource = service.loadFileAsResource(fileName);
+		
+		String contentType = null;
+		try {
+			contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+		} catch (IOException e) {
+			logger.debug("Could not determine file type.");
+		}
+		
+		if (contentType == null) {
+			contentType = "application/octet-stream";
+		}
+		
 		logger.debug("downloadFile ended");
-		return null;
+		
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+				.body(resource);
 	}
 }
