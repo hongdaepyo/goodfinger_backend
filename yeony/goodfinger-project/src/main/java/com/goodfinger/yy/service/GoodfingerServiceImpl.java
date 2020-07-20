@@ -1,6 +1,6 @@
 package com.goodfinger.yy.service;
 
-import java.io.File;
+ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +35,9 @@ public class GoodfingerServiceImpl implements GoodfingerService{
 	@Value("${upload.path}")
 	private String filePathRoot;
 	
+	@Value("${companyDB.path}")
+	private String dbFilePath;
+	
 	@Override
 	public List<Company> getCompanyAll() {
 		List<Company> com = repositoryCom.findAll();
@@ -61,7 +64,7 @@ public class GoodfingerServiceImpl implements GoodfingerService{
 		String filePathRoot = param.get("filePathRoot").toString();
 		
 		Company com = new Company();
-		String returnStatus = "";
+		String returnStatus = "error";
 		
 		try {
 			JSONParser jsonpar = new JSONParser();
@@ -109,32 +112,33 @@ public class GoodfingerServiceImpl implements GoodfingerService{
 		String filePathRoot = param.get("filePathRoot").toString();
 		
 		Company com = new Company();
-		String returnStatus = "fail";
+		String returnStatus = "error";
 		
 		try {
 			JSONParser jsonpar = new JSONParser();
 			JSONObject updateCom = (JSONObject) jsonpar.parse(comstring);
 			System.out.println(comId);
 			Company oldCom2 = dao.findByCompanyId(comId);
-			List<String> oldComFileList = oldCom2.getPicture();
 			
 			com.setId(oldCom2.getId());
 			com.setLocation(updateCom.get("location").toString());
 			com.setName(updateCom.get("name").toString());
 			com.setMasterId(updateCom.get("masterId").toString());
-			com.setMastername(updateCom.get("masterName").toString());
+			com.setMastername(updateCom.get("mastername").toString());
 			
 			List<String> filePathAll = new ArrayList<String>();
-			for (int i=0; i<files.size(); i++){
-				if(oldComFileList.contains(files.get(i).getOriginalFilename()) == false){
-					ArrayList<MultipartFile> files2 = new ArrayList<MultipartFile>();
-					files2.add(files.get(i));
-					filePathAll.add(fileUpload(files2).get(0));
-					
-				} else {
-					filePathAll.add(filePathRoot + files.get(i).getOriginalFilename());
+			
+			if(files.size() > 0){
+				filePathAll = fileUpload(files);
+				if(filePathAll.get(0).equalsIgnoreCase("error")){
+					new Throwable();
 				}
 			}
+			
+			if(oldCom2.getPicture().size() > 0){
+				fileDelete((ArrayList<String>)oldCom2.getPicture());
+			}
+			
 			com.setPicture(filePathAll);
 			
 			dao.updateCompany(com);
@@ -148,46 +152,63 @@ public class GoodfingerServiceImpl implements GoodfingerService{
 	}
 	
 	// autoWired X file upload 
-	private List<String> fileUpload(ArrayList<MultipartFile> files) throws Exception{
+	private List<String> fileUpload(ArrayList<MultipartFile> files){
 		System.out.println("fileUpload START.");
 		List<String> makeFile = new ArrayList<String>();
 		ArrayList<String> successFile = new ArrayList<>(); 
 		
-		try {
-			for(MultipartFile file2 : files){
-				UUID fileUuid = UUID.randomUUID();
-				String filePath = filePathRoot + fileUuid.toString() + "." + file2.getOriginalFilename().split("\\.")[1];
-				System.out.println(filePath);
-				
-				File fileData = new File(filePath);
-				file2.transferTo(fileData);
-				makeFile.add(filePath);
-				successFile.add(filePath);
-				System.out.println("success.");
+		
+		for(int i=0; i <files.size(); i++){
+			
+			UUID fileUuid = UUID.randomUUID();
+			
+			// uuid.jpg
+			String uuidPath = fileUuid.toString() + "." + files.get(i).getOriginalFilename().split("\\.")[1];
+			
+			// /home/files/companyfile/uuid.jpg
+			// filepathroot = /home/files/companyfile/
+			String filePath = filePathRoot + uuidPath;
+			
+			// /files/companyfile/uuid.jpg
+			String dbFilePathFullName = dbFilePath + uuidPath;
+			System.out.println(dbFilePathFullName);
+			
+			File fileData = new File(filePath);
+			try {
+				files.get(i).transferTo(fileData);
+			} catch (Exception e) {
+				String x = "error";
+				successFile.clear();
+				successFile.add("error");
+				return successFile;
 			}
-		} catch (IllegalStateException | IOException e) {
-			System.out.println("fail.");
-			fileDelete(successFile);
+			makeFile.add(dbFilePathFullName);
+			successFile.add(filePath);
+			System.out.println("success.");
 		}
 		System.out.println("fileUpload END.");
 		return makeFile; 
 	}
 	
-	private String fileDelete(ArrayList<String> files) throws IllegalStateException, IOException{
+	private String fileDelete(ArrayList<String> files) {
 		System.out.println("fileDelete START");
-		String returnStatus = "fail";
-		for(String filePath : files){
-			File fileData = new File(filePath);
-			if(fileData.exists()){
-				if(fileData.delete()){
-					log.debug("success delete file " + filePath);
+		String returnStatus = "error";
+		try {
+			for(String filePath : files){
+				File fileData = new File(filePath);
+				if(fileData.exists()){
+					if(fileData.delete()){
+						log.debug("success delete file " + filePath);
+					} else {
+						log.debug("fail delete file " + filePath);
+					}
 				} else {
-					log.debug("fail delete file " + filePath);
+					log.debug("notExists file " + filePath);
 				}
-			} else {
-				log.debug("notExists file " + filePath);
+				returnStatus = "ok";
 			}
-			returnStatus = "true";
+		} catch (Exception e) {
+			returnStatus = "error";
 		}
 		
 		System.out.println("fileDelete END.");
@@ -198,23 +219,29 @@ public class GoodfingerServiceImpl implements GoodfingerService{
 	@Override
 	public String deleteCompany(String comId) {
 		System.out.println("deleteCompany START.");
-		String returnStatus = "";
+		String returnStatus = "error";
 		
 		try {
 			Company com = dao.findByCompanyId(comId);
 			
-			ArrayList<String> pictureList = (ArrayList<String>) com.getPicture();
-			String deleteStatus = fileDelete(pictureList);
+			ArrayList<String> pictureList = (ArrayList<String>)com.getPicture();
+			String deleteStatus = "error";
 			
-			if(deleteStatus.equals("true")){
-				dao.deleteCompany(comId);
-			} else {
-				Exception e = new Exception("파일삭제중 에러발생.");
-				throw e;	
+			if(pictureList.size() > 0 ){
+				deleteStatus = fileDelete(pictureList);
+				if(deleteStatus.equalsIgnoreCase("error")){
+					System.out.println("파일 삭제중 에러발생.");
+					return returnStatus;	
+				}
 			}
+			
+			dao.deleteCompany(comId);
+			returnStatus = "ok";
+			
 		} catch (Exception e) {
 			returnStatus = "error";
 			e.printStackTrace();
+			return returnStatus;
 		}
 		
 		System.out.println("deleteCompany END.");

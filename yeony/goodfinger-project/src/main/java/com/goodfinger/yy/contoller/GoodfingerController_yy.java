@@ -135,17 +135,10 @@ public class GoodfingerController_yy {
 		System.out.println("company" + company);
 		
 		String returnStatus = "";
-		
-		try {
-			returnStatus = service.updateCompany(param);
-			if(returnStatus.equalsIgnoreCase("error")){
-				new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
-			} 
-		} catch ( Exception  e) {
-			e.printStackTrace();
-			new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
+		returnStatus = service.updateCompany(param);
+		if(returnStatus.equalsIgnoreCase("error")){
+			return new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
 		} 
-		
 		return new ResponseEntity<String>(returnStatus, HttpStatus.OK);
 	}
 
@@ -164,14 +157,14 @@ public class GoodfingerController_yy {
 		try {
 			returnStatus = service.deleteCompany(comId);
 			if(returnStatus.equalsIgnoreCase("error")){
-				new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
+				
 			}
-			returnStatus = "ok";
 		} catch ( Exception  e) {
 			e.printStackTrace();
-			new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
+			return new ResponseEntity<String>("error", HttpStatus.EXPECTATION_FAILED);
 		} 
 		
+		returnStatus = "ok";
 		return new ResponseEntity<String>(returnStatus, HttpStatus.OK);
 	}
 }

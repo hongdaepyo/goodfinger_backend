@@ -1,11 +1,9 @@
 # Start with a base image containing Java runtime
 FROM java:8
 
-# Add Author info
-LABEL maintainer="pyenkr93@gmail.com"
+RUN mkdir -p /home/files/companyfile/
 
-# Add a volume to /tmp
-VOLUME /tmp
+VOLUME ["/home/ec2-user/fileROOT/","/home/ec2-user/fileROOT/"]
 
 # Make port 8080 available to the world outside this container
 EXPOSE 80
@@ -18,3 +16,4 @@ ADD ${JAR_FILE} goodfinger2-springboot.jar
 
 # Run the jar file
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/goodfinger2-springboot.jar"]
+
