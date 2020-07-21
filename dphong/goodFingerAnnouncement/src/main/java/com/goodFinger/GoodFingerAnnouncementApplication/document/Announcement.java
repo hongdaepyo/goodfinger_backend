@@ -25,10 +25,10 @@ public class Announcement implements Serializable {
 	private String announcementId;
 	private String flag;
 	private String company;
-	private int category;
+	private String[] category;
 	private String locationCity;
 	private String locationDistrict;
-	private int recruitment;
+	private int recruitment; //모집인원
 	private String preferredSex;
 	private int[] preferredAge = {10, 20 ,30};
 	private String task;
@@ -37,7 +37,7 @@ public class Announcement implements Serializable {
 	private String startTime;
 	private String endTime;
 	private String[] salary = {"day", "time", "month"};
-	private String etc;
+	private EtcOption etc;
 	private String joboffer;
 	private String[] picture;
 	private String memo;
@@ -45,5 +45,6 @@ public class Announcement implements Serializable {
 	private String questions;
 	private String applicant_questions;
 	private String[] applicant;
+	private PartTimeInfo partTimeInfo;
 
 }

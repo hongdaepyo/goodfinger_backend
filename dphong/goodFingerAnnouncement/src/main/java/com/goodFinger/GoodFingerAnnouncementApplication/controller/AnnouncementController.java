@@ -1,6 +1,8 @@
 package com.goodFinger.GoodFingerAnnouncementApplication.controller;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -14,7 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.goodFinger.GoodFingerAnnouncementApplication.document.Announcement;
+import com.goodFinger.GoodFingerAnnouncementApplication.document.EtcOption;
+import com.goodFinger.GoodFingerAnnouncementApplication.document.PartTimeInfo;
+import com.goodFinger.GoodFingerAnnouncementApplication.document.Question;
 import com.goodFinger.GoodFingerAnnouncementApplication.service.AnnouncementServiceImpl;
+
+import net.minidev.json.JSONObject;
 
 @RestController
 @RequestMapping("/announcement")
@@ -45,10 +52,45 @@ public class AnnouncementController {
 		return announcementServiceImpl.getWaitingAnnouncementList();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.POST, value = "/insert")
-	public String insertAnnouncement(@RequestBody Announcement announcement) {
+	public String insertAnnouncement(@RequestBody JSONObject requestBody) {
 		logger.debug("insertAnnouncement started");
 		String result = "";
+		
+		Map<String, Object> parttime = new LinkedHashMap<String, Object>();
+		parttime = (Map<String, Object>) requestBody.get("parttime");
+		String flag = (String) parttime.get("flag");
+		String company = (String) parttime.get("company");
+		String[] category = (String[]) parttime.get("category");
+		int recruitment = (int) parttime.get("recruitment");
+		String preferredSex = (String) parttime.get("preferredSex");
+		int[] preferredAge = (int[]) parttime.get("preferredAge");
+		String task = (String) parttime.get("task");
+		String startDate = (String) parttime.get("startDate");
+		String endDate = (String) parttime.get("endDate");
+		String startTime = (String) parttime.get("startTime");
+		String endTime = (String) parttime.get("endTime");
+		String[] salary = (String[]) parttime.get("salary");
+		EtcOption etc = (EtcOption) parttime.get("etc");
+		PartTimeInfo partTimeInfo = (PartTimeInfo) parttime.get("partTimeInfo");
+		
+		Question question = (Question) requestBody.get("question");
+		
+		Announcement announcement = new Announcement();
+		announcement.setFlag(flag);
+		announcement.setCompany(company);
+		announcement.setCategory(category);
+		announcement.setRecruitment(recruitment);
+		announcement.setPreferredSex(preferredSex);
+		announcement.setPreferredAge(preferredAge);
+		announcement.setStartDate(startDate);
+		announcement.setEndDate(endDate);
+		announcement.setStartTime(startTime);
+		announcement.setEndTime(endTime);
+		announcement.setSalary(salary);
+		announcement.setEtc(etc);
+		announcement.setPartTimeInfo(partTimeInfo);
 		
 		try {
 			result = announcementServiceImpl.insertAnnouncement(announcement);
