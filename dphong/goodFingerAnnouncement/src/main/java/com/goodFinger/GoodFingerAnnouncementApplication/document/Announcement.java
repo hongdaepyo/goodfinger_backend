@@ -37,7 +37,7 @@ public class Announcement implements Serializable {
 	private String startTime;
 	private String endTime;
 	private String[] salary = {"day", "time", "month"};
-	private String etc;
+	private EtcOption etc;
 	private String joboffer;
 	private String[] picture;
 	private String memo;
@@ -45,5 +45,6 @@ public class Announcement implements Serializable {
 	private String questions;
 	private String applicant_questions;
 	private String[] applicant;
+	private PartTimeInfo partTimeInfo;
 
 }
