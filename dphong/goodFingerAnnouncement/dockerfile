@@ -4,10 +4,10 @@ FROM openjdk:8-alpine
 # Add Author info
 LABEL maintainer="h1o1n1g1@nate.com"
 
-RUN mkdir -p /home/files/announcementFile/
+RUN mkdir -p /home/files/announcement/
 
 # Add a volume to /tmp
-VOLUME /home/ec2-user/fileROOT/
+VOLUME /home/files/announcement/
 
 # Make port 8080 available to the world outside this container
 EXPOSE 80
