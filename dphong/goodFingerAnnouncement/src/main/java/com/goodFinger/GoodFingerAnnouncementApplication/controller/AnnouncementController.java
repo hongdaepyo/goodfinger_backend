@@ -1,5 +1,7 @@
 package com.goodFinger.GoodFingerAnnouncementApplication.controller;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,9 @@ import com.goodFinger.GoodFingerAnnouncementApplication.document.EtcOption;
 import com.goodFinger.GoodFingerAnnouncementApplication.document.PartTimeInfo;
 import com.goodFinger.GoodFingerAnnouncementApplication.document.Question;
 import com.goodFinger.GoodFingerAnnouncementApplication.service.AnnouncementServiceImpl;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import net.minidev.json.JSONObject;
 
@@ -52,49 +57,18 @@ public class AnnouncementController {
 		return announcementServiceImpl.getWaitingAnnouncementList();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.POST, value = "/insert")
 	public String insertAnnouncement(@RequestBody JSONObject requestBody) {
 		logger.debug("insertAnnouncement started");
 		String result = "";
 		
-		Map<String, Object> parttime = new LinkedHashMap<String, Object>();
-		parttime = (Map<String, Object>) requestBody.get("parttime");
-		String flag = (String) parttime.get("flag");
-		String company = (String) parttime.get("company");
-		String[] category = (String[]) parttime.get("category");
-		int recruitment = (int) parttime.get("recruitment");
-		String preferredSex = (String) parttime.get("preferredSex");
-		int[] preferredAge = (int[]) parttime.get("preferredAge");
-		String task = (String) parttime.get("task");
-		String startDate = (String) parttime.get("startDate");
-		String endDate = (String) parttime.get("endDate");
-		String startTime = (String) parttime.get("startTime");
-		String endTime = (String) parttime.get("endTime");
-		String[] salary = (String[]) parttime.get("salary");
-		EtcOption etc = (EtcOption) parttime.get("etc");
-		PartTimeInfo partTimeInfo = (PartTimeInfo) parttime.get("partTimeInfo");
+		JSONObject partTimeObj = getJSONObject(requestBody, "parttime");
 		
-		Question question = (Question) requestBody.get("question");
-		
-		Announcement announcement = new Announcement();
-		announcement.setFlag(flag);
-		announcement.setCompany(company);
-		announcement.setCategory(category);
-		announcement.setRecruitment(recruitment);
-		announcement.setPreferredSex(preferredSex);
-		announcement.setPreferredAge(preferredAge);
-		announcement.setStartDate(startDate);
-		announcement.setEndDate(endDate);
-		announcement.setStartTime(startTime);
-		announcement.setEndTime(endTime);
-		announcement.setSalary(salary);
-		announcement.setEtc(etc);
-		announcement.setPartTimeInfo(partTimeInfo);
+		Announcement announcement = JsonToObject(partTimeObj, Announcement.class);
 		
 		try {
 			result = announcementServiceImpl.insertAnnouncement(announcement);
-			logger.debug("result = " + announcement);
+			logger.debug("result = " + result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -117,5 +91,14 @@ public class AnnouncementController {
 		
 		logger.debug("setTestData ended");
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject getJSONObject(JSONObject jsonObj, String key) {
+		return new JSONObject((Map<String, Object>) jsonObj.get(key));
+	}
+	
+	private <T> T JsonToObject(JSONObject json, Class<T> targetClass) {
+		return new Gson().fromJson(json.toJSONString(), (Type) targetClass);
 	}
 }

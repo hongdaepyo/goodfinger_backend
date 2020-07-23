@@ -21,7 +21,7 @@ public class EtcOption implements Serializable {
 	
 	@Id
 	private String salaryRightNow;
-	private String breakTime;
+	private String breaktime;
 	private String oneDayWorker;
 
 }
