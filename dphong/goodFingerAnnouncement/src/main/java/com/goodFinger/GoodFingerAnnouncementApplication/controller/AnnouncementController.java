@@ -2,6 +2,7 @@ package com.goodFinger.GoodFingerAnnouncementApplication.controller;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.goodFinger.GoodFingerAnnouncementApplication.document.Announcement;
+import com.goodFinger.GoodFingerAnnouncementApplication.document.ApplicantQ;
 import com.goodFinger.GoodFingerAnnouncementApplication.document.EtcOption;
 import com.goodFinger.GoodFingerAnnouncementApplication.document.PartTimeInfo;
 import com.goodFinger.GoodFingerAnnouncementApplication.document.Question;
@@ -26,6 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 @RestController
@@ -63,8 +66,12 @@ public class AnnouncementController {
 		String result = "";
 		
 		JSONObject partTimeObj = getJSONObject(requestBody, "parttime");
+		JSONArray question = getJSONArray(requestBody, "question");
 		
 		Announcement announcement = JsonToObject(partTimeObj, Announcement.class);
+		List<ApplicantQ> applicantQuestionList = JsonArrayToObject(question, ApplicantQ.class);
+		
+		// TODO applicant question은 더 처리해야함.
 		
 		try {
 			result = announcementServiceImpl.insertAnnouncement(announcement);
@@ -98,7 +105,33 @@ public class AnnouncementController {
 		return new JSONObject((Map<String, Object>) jsonObj.get(key));
 	}
 	
+	@SuppressWarnings("unchecked")
+	private JSONArray getJSONArray(JSONObject jsonObj, String key) {
+		JSONArray jsonArray = new JSONArray();
+		ArrayList<JSONObject> jsonObjList = (ArrayList<JSONObject>) jsonObj.get(key);
+		for (int i = 0; i < jsonObjList.size(); i++) {
+			jsonArray.add(jsonObjList.get(i));
+		}
+		
+		return jsonArray;
+	}
+	
 	private <T> T JsonToObject(JSONObject json, Class<T> targetClass) {
 		return new Gson().fromJson(json.toJSONString(), (Type) targetClass);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private <T> List<T> JsonArrayToObject(JSONArray jsonArray, Class<T> targetClass) {
+		List<T> list = new ArrayList<T>();
+		JSONObject jsonObj;
+		Gson gson = new Gson();
+		
+		for (int i = 0; i < jsonArray.size(); i++) {
+			jsonObj = new JSONObject((Map<String, Object>) jsonArray.get(i));
+			T targetObject = gson.fromJson(jsonObj.toJSONString(), (Type) targetClass);
+			list.add(targetObject);
+		}
+		
+		return list;
 	}
 }
