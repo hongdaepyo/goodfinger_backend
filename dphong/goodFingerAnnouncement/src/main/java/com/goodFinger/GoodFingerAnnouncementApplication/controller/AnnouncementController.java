@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.goodFinger.GoodFingerAnnouncementApplication.document.Announcement;
 import com.goodFinger.GoodFingerAnnouncementApplication.document.ApplicantQ;
+import com.goodFinger.GoodFingerAnnouncementApplication.document.ApplicantQuestion;
 import com.goodFinger.GoodFingerAnnouncementApplication.document.EtcOption;
 import com.goodFinger.GoodFingerAnnouncementApplication.document.PartTimeInfo;
 import com.goodFinger.GoodFingerAnnouncementApplication.document.Question;
@@ -69,13 +70,22 @@ public class AnnouncementController {
 		JSONArray question = getJSONArray(requestBody, "question");
 		
 		Announcement announcement = JsonToObject(partTimeObj, Announcement.class);
-		List<ApplicantQ> applicantQuestionList = JsonArrayToObject(question, ApplicantQ.class);
+		List<ApplicantQ> applicantQList = JsonArrayToObject(question, ApplicantQ.class);
 		
 		// TODO applicant question은 더 처리해야함.
 		
 		try {
-			result = announcementServiceImpl.insertAnnouncement(announcement);
-			logger.debug("result = " + result);
+			Announcement resultObj = announcementServiceImpl.insertAnnouncement(announcement);
+			
+			if (resultObj != null) {
+				ApplicantQuestion applicantQuestion = new ApplicantQuestion();
+				applicantQuestion.setAnnouncementId(resultObj.getId());
+				applicantQuestion.setApplicantQList(applicantQList.toArray(new ApplicantQ[applicantQList.size()]));
+				
+				logger.debug("result = " + resultObj);
+			} else {
+				logger.debug("insertAnnouncement failed");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -44,13 +44,13 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 	}
 	
 	@Override
-	public String insertAnnouncement(Announcement announcement) throws Exception {
+	public Announcement insertAnnouncement(Announcement announcement) throws Exception {
 		logger.debug("insertAnnouncement service started");
 		
-		mongoTemplate.insert(announcement);
+		Announcement result = mongoTemplate.insert(announcement);
 		
 		logger.debug("insertAnnouncement service ended");
-		return "TRUE";
+		return result;
 	}
 
 	@Override
