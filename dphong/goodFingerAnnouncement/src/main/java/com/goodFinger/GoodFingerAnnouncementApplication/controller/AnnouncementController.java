@@ -106,12 +106,30 @@ public class AnnouncementController {
 		logger.debug("delete id = " + id);
 		try {
 			result = announcementServiceImpl.deleteAnnouncement(id);
+			
+			// TODO 파일 삭제 기능 추가할 것.
 			logger.debug("result = " + result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		logger.debug("deleteAnnouncement ended");
+		return result;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/deleteAll")
+	public String deleteAllAnnouncement() {
+		logger.debug("deleteAllAnnouncement started");
+		String result = "";
+		
+		try {
+			result = announcementServiceImpl.deleteAllAnnouncement();
+			logger.debug("result = " + result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("deleteAllAnnouncement ended");
 		return result;
 	}
 	

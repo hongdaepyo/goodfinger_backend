@@ -11,5 +11,6 @@ public interface AnnouncementService {
 	public Announcement insertAnnouncement(Announcement announcement) throws Exception;
 	public String insertTestData() throws Exception;
 	public String deleteAnnouncement(String id);
+	public String deleteAllAnnouncement();
 	
 }
