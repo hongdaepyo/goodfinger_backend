@@ -83,4 +83,17 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 		return "TRUE";
 	}
 
+	@Override
+	public String deleteAnnouncement(String id) {
+		logger.debug("deleteAnnouncement service started");
+		
+		Announcement announcement = new Announcement();
+		announcement.setId(id);
+		
+		announcementRepo.delete(announcement);
+		
+		logger.debug("deleteAnnouncement service ended");
+		return "TRUE";
+	}
+
 }

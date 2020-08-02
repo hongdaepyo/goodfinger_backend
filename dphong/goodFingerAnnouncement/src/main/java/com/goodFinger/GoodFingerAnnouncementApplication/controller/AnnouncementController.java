@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -83,14 +84,34 @@ public class AnnouncementController {
 				applicantQuestion.setApplicantQList(applicantQList.toArray(new ApplicantQ[applicantQList.size()]));
 				
 				logger.debug("result = " + resultObj);
+				result = "TRUE";
 			} else {
 				logger.debug("insertAnnouncement failed");
+				result = "FALSE";
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		logger.debug("insertAnnouncement ended");
+		return result;
+	}
+	
+	@RequestMapping(method = RequestMethod.PUT, value = "/delete/{id}")
+	public String deleteAnnouncement(@PathVariable String id) {
+		logger.debug("deleteAnnouncement started");
+		String result = "";
+		
+		logger.debug("delete id = " + id);
+		try {
+			result = announcementServiceImpl.deleteAnnouncement(id);
+			logger.debug("result = " + result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("deleteAnnouncement ended");
 		return result;
 	}
 	

@@ -10,5 +10,6 @@ public interface AnnouncementService {
 	public List<Announcement> getWaitingAnnouncementList() throws Exception;
 	public Announcement insertAnnouncement(Announcement announcement) throws Exception;
 	public String insertTestData() throws Exception;
+	public String deleteAnnouncement(String id);
 	
 }
